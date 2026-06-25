@@ -13,11 +13,16 @@ function Butterfly() {
     const t = clock.getElapsedTime()
 
     if (group.current) {
-      group.current.position.x = Math.sin(t) * 2
-      group.current.position.y = 2 + Math.sin(t * 3) * 0.5
-      group.current.position.z = Math.cos(t) * 2
+      // Circular flight path around user
+      group.current.position.x = Math.sin(t) * 3
+      group.current.position.z = -3 + Math.cos(t) * 3
+      group.current.position.y = 1.8 + Math.sin(t * 3) * 0.4
 
-      group.current.rotation.y += 0.02
+      // Face flight direction
+      group.current.rotation.y = -t
+
+      // Slight tilt while flying
+      group.current.rotation.z = Math.sin(t * 5) * 0.2
     }
   })
 
@@ -33,17 +38,26 @@ function Butterfly() {
 export default function Home() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <Canvas camera={{ position: [0, 2, 5] }}>
+      <Canvas camera={{ position: [0, 1.6, 5], fov: 75 }}>
 
-        <ambientLight intensity={2} />
+        {/* Sky */}
+        <color attach="background" args={['#87CEEB']} />
 
-        <directionalLight position={[5, 5, 5]} />
+        {/* Lighting */}
+        <ambientLight intensity={1.5} />
 
+        <directionalLight
+          position={[10, 15, 10]}
+          intensity={3}
+        />
+
+        {/* Ground */}
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[50, 50]} />
-          <meshStandardMaterial color="green" />
+          <planeGeometry args={[100, 100]} />
+          <meshStandardMaterial color="#6dbf4b" />
         </mesh>
 
+        {/* Butterfly */}
         <Butterfly />
 
       </Canvas>
